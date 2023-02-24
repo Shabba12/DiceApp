@@ -1,5 +1,6 @@
 package com.example.diceapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -11,19 +12,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val textView = findViewById<TextView>(R.id.textView)
-        val button  = findViewById<Button>(R.id.button)
-
-        button.setOnClickListener {
-            changeText(textView)
-        }
-
-
-    }
-
-    private fun changeText(textView: TextView?) {
-        if (textView != null) {
-            textView.text = "Hi shabeer"
+        val aboutBtn = findViewById<Button>(R.id.aboutBtn)
+        aboutBtn.setOnClickListener {
+            val intent = Intent(this,AboutUsActivity::class.java)
+            startActivity(intent)
         }
     }
+
+
 }
