@@ -5,7 +5,7 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_color_2"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -13,14 +13,14 @@
         android:id="@+id/profile_picture"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="100dp"
         android:contentDescription="@string/hacker_icon"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
+        android:src="@drawable/start_screen_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/hacker" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,6 +36,7 @@
             android:id="@+id/newGameBtn"
             android:layout_width="300dp"
             android:layout_height="50dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/button_theme"
             android:text="@string/new_game"
             android:textSize="20sp"
@@ -49,15 +50,28 @@
             android:id="@+id/aboutBtn"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="160dp"
+            android:layout_marginBottom="136dp"
             android:background="@drawable/button_theme"
             android:text="@string/about"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/startScreenText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test your luck "
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
