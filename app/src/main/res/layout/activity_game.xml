@@ -8,69 +8,125 @@
     tools:context=".GameActivity">
 
     <ImageView
-        android:id="@+id/roll1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="96dp"
-        android:src="@drawable/rolling_cup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-    <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/robot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="400dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/rolling_cup"/>
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
-    <ImageView
-        android:id="@+id/roll2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintStart_toEndOf="@+id/roll1"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.657"
-        android:src="@drawable/rolling_cup" />
+        <ImageView
+            android:id="@+id/cRoll1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
 
-    <ImageView
-        android:id="@+id/roll3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintStart_toEndOf="@+id/roll2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.657"
-        android:src="@drawable/rolling_cup" />
+        <ImageView
+            android:id="@+id/cRoll2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
 
-    <ImageView
-        android:id="@+id/roll4"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintStart_toEndOf="@+id/roll3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.657"
-        android:src="@drawable/rolling_cup"/>
+        <ImageView
+            android:id="@+id/cRoll3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
 
-    <ImageView
-        android:id="@+id/roll5"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintStart_toEndOf="@+id/roll4"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.657"
-        android:src="@drawable/rolling_cup" />
+        <ImageView
+            android:id="@+id/cRoll4"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+
+        <ImageView
+            android:id="@+id/cRoll5"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="400dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <ImageView
+            android:id="@+id/hRoll1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="0dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+
+        <ImageView
+            android:id="@+id/hRoll2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+
+        <ImageView
+            android:id="@+id/hRoll3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+
+        <ImageView
+            android:id="@+id/hRoll4"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+
+        <ImageView
+            android:id="@+id/hRoll5"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/rolling_cup" />
+
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -80,7 +136,7 @@
         android:background="@drawable/background_rounded_edges"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roll1">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <Button
             android:id="@+id/throwbtn"
