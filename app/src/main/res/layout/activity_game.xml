@@ -34,7 +34,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="0dp"
-            android:layout_weight="1"
             android:contentDescription="TODO"
             android:src="@drawable/rolling_cup" />
 
@@ -43,7 +42,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
-            android:layout_weight="1"
             android:contentDescription="TODO"
             android:src="@drawable/rolling_cup" />
 
@@ -52,7 +50,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
-            android:layout_weight="1"
             android:contentDescription="TODO"
             android:src="@drawable/rolling_cup" />
 
@@ -61,7 +58,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
-            android:layout_weight="1"
             android:contentDescription="TODO"
             android:src="@drawable/rolling_cup" />
 
@@ -70,7 +66,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
-            android:layout_weight="1"
             android:contentDescription="TODO"
             android:src="@drawable/rolling_cup" />
     </LinearLayout>
@@ -164,5 +159,18 @@
             app:layout_constraintStart_toEndOf="@+id/throwbtn"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="10dp"
+        android:text="fgfgf"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

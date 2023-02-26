@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
     private var humanDiceArray = mutableListOf<Int>()
     private var computerDiceArray = mutableListOf<Int>()
+    private var humanScore = 0
+    private var computerScore = 0
+    private var humanRollCount = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,27 +32,60 @@ class GameActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.hRoll5)
 
         )
+
         val computerImgView = arrayOf(
-            findViewById(R.id.cRoll1),
+            findViewById<ImageView>(R.id.cRoll1),
             findViewById(R.id.cRoll2),
             findViewById(R.id.cRoll3),
             findViewById(R.id.cRoll4),
-            findViewById(R.id.cRoll5),
+            findViewById(R.id.cRoll5)
         )
 
 
         throwButton.setOnClickListener {
             // Generate random values for the dice
-            for (i in 0..4) {
-                humanDiceArray.add(Random.nextInt(1, 7))
-                computerDiceArray.add(Random.nextInt(1, 7))
+            if (humanRollCount<3){
+                for (i in 0..4) {
+                    humanDiceArray.add(Random.nextInt(1, 7))
+                    computerDiceArray.add(Random.nextInt(1, 7))
+                }
+                // Display the dice images
+                showDiceImages(humanDiceArray, humanImgView)
+                showDiceImages(computerDiceArray, computerImgView)
+                humanRollCount++
+                totalScore()
+                if (humanRollCount == 3){
+                    scoreBtn.performClick()
+                }
+            }else{
+                Toast.makeText(this,"Maximum rolls reached!",Toast.LENGTH_SHORT).show()
             }
-
-            // Display the dice images
-            showDiceImages(humanDiceArray, humanImgView)
-//            showDiceImages(computerDiceArray, "computer")
         }
+        scoreBtn.setOnClickListener {
+//            totalScore()
+            humanRollCount = 0
+            showScore()
+        }
+    }
 
+    private fun totalScore() {
+        humanScore += addScore(humanDiceArray)
+        computerScore += addScore(computerDiceArray)
+        humanDiceArray.clear()
+        computerDiceArray.clear()
+    }
+
+    private fun showScore() {
+        val viewScore = "SCORE:\nCOM:$computerScore\nME:$humanScore"
+        findViewById<TextView>(R.id.scoreTextView).text = viewScore
+    }
+
+    private fun addScore(DiceArray: MutableList<Int>): Int {
+        var tot = 0
+        for (i in DiceArray){
+            tot+= i
+        }
+        return tot
     }
 
     private fun showDiceImages(values: MutableList<Int>, humanImgView: Array<ImageView>) {
@@ -62,9 +100,7 @@ class GameActivity : AppCompatActivity() {
         )
         for (i in humanImgView.indices){
             humanImgView[i].setImageResource(imageId[values[i]-1])
-            println(values[i])
         }
-
         println(values)
 
     }
