@@ -3,6 +3,7 @@ package com.example.diceapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,11 +11,14 @@ import android.widget.Toast
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
-    private var humanDiceArray = mutableListOf<Int>()
+    lateinit var playerImgView: List<ImageView>
+    lateinit var computerImgView: List<ImageView>
+    private var playerDiceArray = mutableListOf<Int>()
     private var computerDiceArray = mutableListOf<Int>()
-    private var humanScore = 0
+    private var playerScore = 0
     private var computerScore = 0
-    private var humanRollCount = 0
+    private var playerRollCount = 0
+    private var optionalRollCount = 2
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,37 +28,44 @@ class GameActivity : AppCompatActivity() {
         val throwButton = findViewById<Button>(R.id.throwbtn)
         val scoreBtn = findViewById<Button>(R.id.scoreBtn)
 
-        val humanImgView = arrayOf(
-            findViewById<ImageView>(R.id.hRoll1),
-            findViewById<ImageView>(R.id.hRoll2),
-            findViewById<ImageView>(R.id.hRoll3),
-            findViewById<ImageView>(R.id.hRoll4),
-            findViewById<ImageView>(R.id.hRoll5)
-
+        playerImgView = listOf(
+            findViewById(R.id.hRoll1),
+            findViewById(R.id.hRoll2),
+            findViewById(R.id.hRoll3),
+            findViewById(R.id.hRoll4),
+            findViewById(R.id.hRoll5)
         )
 
-        val computerImgView = arrayOf(
-            findViewById<ImageView>(R.id.cRoll1),
+        computerImgView = listOf(
+            findViewById(R.id.cRoll1),
             findViewById(R.id.cRoll2),
             findViewById(R.id.cRoll3),
             findViewById(R.id.cRoll4),
             findViewById(R.id.cRoll5)
         )
 
+        if (playerDiceArray != null){
+
+        }
 
         throwButton.setOnClickListener {
             // Generate random values for the dice
-            if (humanRollCount<3){
-                for (i in 0..4) {
-                    humanDiceArray.add(Random.nextInt(1, 7))
-                    computerDiceArray.add(Random.nextInt(1, 7))
-                }
+            if (playerRollCount<3){
+                rollDice()
                 // Display the dice images
-                showDiceImages(humanDiceArray, humanImgView)
+                showDiceImages(playerDiceArray, playerImgView)
                 showDiceImages(computerDiceArray, computerImgView)
-                humanRollCount++
+                playerRollCount++
+
+                val reRollbtn = findViewById<Button>(R.id.reRollBtn)
+                reRollbtn.visibility = View.VISIBLE
+                reRollbtn.setOnClickListener {
+                    if (optionalRollCount!=0){
+
+                    }
+                }
                 totalScore()
-                if (humanRollCount == 3){
+                if (playerRollCount == 3){
                     scoreBtn.performClick()
                 }
             }else{
@@ -63,20 +74,27 @@ class GameActivity : AppCompatActivity() {
         }
         scoreBtn.setOnClickListener {
 //            totalScore()
-            humanRollCount = 0
+            playerRollCount = 0
             showScore()
         }
     }
 
+    private fun rollDice() {
+        for (i in 0..4) {
+            playerDiceArray.add(Random.nextInt(1, 7))
+            computerDiceArray.add(Random.nextInt(1, 7))
+        }
+    }
+
     private fun totalScore() {
-        humanScore += addScore(humanDiceArray)
+        playerScore += addScore(playerDiceArray)
         computerScore += addScore(computerDiceArray)
-        humanDiceArray.clear()
+        playerDiceArray.clear()
         computerDiceArray.clear()
     }
 
     private fun showScore() {
-        val viewScore = "SCORE:\nCOM:$computerScore\nME:$humanScore"
+        val viewScore = "SCORE:\nCOM:$computerScore\nME:$playerScore"
         findViewById<TextView>(R.id.scoreTextView).text = viewScore
     }
 
@@ -88,7 +106,7 @@ class GameActivity : AppCompatActivity() {
         return tot
     }
 
-    private fun showDiceImages(values: MutableList<Int>, humanImgView: Array<ImageView>) {
+    private fun showDiceImages(values: MutableList<Int>, humanImgView: List<ImageView>) {
 
         val imageId = arrayOf(
             R.drawable.dice_1,
