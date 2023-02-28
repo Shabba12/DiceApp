@@ -19,6 +19,7 @@ class GameActivity : AppCompatActivity() {
     private var computerScore = 0
     private var playerRollCount = 0
     private var optionalRollCount = 2
+    private var selectedRoll = mutableListOf<Int>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class GameActivity : AppCompatActivity() {
 
         val throwButton = findViewById<Button>(R.id.throwbtn)
         val scoreBtn = findViewById<Button>(R.id.scoreBtn)
+        val reRollbtn = findViewById<Button>(R.id.reRollBtn)
 
         playerImgView = listOf(
             findViewById(R.id.hRoll1),
@@ -44,11 +46,13 @@ class GameActivity : AppCompatActivity() {
             findViewById(R.id.cRoll5)
         )
 
-        if (playerDiceArray != null){
 
-        }
 
         throwButton.setOnClickListener {
+            playerDiceArray.clear()
+            computerDiceArray.clear()
+            selectedRoll.clear()
+            optionalRollCount = 2
             // Generate random values for the dice
             if (playerRollCount<3){
                 rollDice()
@@ -57,19 +61,49 @@ class GameActivity : AppCompatActivity() {
                 showDiceImages(computerDiceArray, computerImgView)
                 playerRollCount++
 
-                val reRollbtn = findViewById<Button>(R.id.reRollBtn)
-                reRollbtn.visibility = View.VISIBLE
-                reRollbtn.setOnClickListener {
-                    if (optionalRollCount!=0){
-
-                    }
-                }
                 totalScore()
-                if (playerRollCount == 3){
-                    scoreBtn.performClick()
+                scoreBtn.performClick()
+                playerImgView[0].setOnClickListener{
+                    selectedRoll.add(0)
+                    Toast.makeText(this,"Roll 1 selected",Toast.LENGTH_SHORT).show()
                 }
+                playerImgView[1].setOnClickListener{
+                    selectedRoll.add(1)
+                    Toast.makeText(this,"Roll 2 selected",Toast.LENGTH_SHORT).show()
+                }
+                playerImgView[2].setOnClickListener{
+                    selectedRoll.add(2)
+                    Toast.makeText(this,"Roll 3 selected",Toast.LENGTH_SHORT).show()
+                }
+                playerImgView[3].setOnClickListener{
+                    selectedRoll.add(3)
+                    Toast.makeText(this,"Roll 4 selected",Toast.LENGTH_SHORT).show()
+                }
+                playerImgView[4].setOnClickListener{
+                    selectedRoll.add(4)
+                    Toast.makeText(this,"Roll 5 selected",Toast.LENGTH_SHORT).show()
+                }
+
+                reRollbtn.visibility = View.VISIBLE
+
+
+
             }else{
                 Toast.makeText(this,"Maximum rolls reached!",Toast.LENGTH_SHORT).show()
+            }
+        }
+        reRollbtn.setOnClickListener {
+            //once reroll is called it substarts the throw dice total because reroll will roll that saem turn again
+            playerScore -= playerDiceArray.sum()
+            if (optionalRollCount!=0){
+                optionalRollCount--
+                rollSelectedDice(selectedRoll,playerDiceArray)
+                showDiceImages(playerDiceArray,playerImgView)
+                //adds the reroll value to the score board
+                playerScore += playerDiceArray.sum()
+                scoreBtn.performClick()
+            }else{
+                Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
             }
         }
         scoreBtn.setOnClickListener {
@@ -77,6 +111,17 @@ class GameActivity : AppCompatActivity() {
             playerRollCount = 0
             showScore()
         }
+    }
+
+    private fun rollSelectedDice(selectedRoll: MutableList<Int>, playerDiceArray: MutableList<Int>) {
+        println(selectedRoll)
+        println(playerDiceArray)
+        for (i in 0 until playerDiceArray.size){
+            if (!selectedRoll.contains(i)){
+                playerDiceArray[i] = Random.nextInt(1, 7)
+            }
+        }
+        println(playerDiceArray)
     }
 
     private fun rollDice() {
@@ -87,10 +132,10 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun totalScore() {
-        playerScore += addScore(playerDiceArray)
-        computerScore += addScore(computerDiceArray)
-        playerDiceArray.clear()
-        computerDiceArray.clear()
+        playerScore += playerDiceArray.sum()
+        computerScore += computerDiceArray.sum()
+//        playerDiceArray.clear()
+//        computerDiceArray.clear()
     }
 
     private fun showScore() {
