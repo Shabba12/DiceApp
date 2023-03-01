@@ -11,8 +11,8 @@ import android.widget.Toast
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
-    lateinit var playerImgView: List<ImageView>
-    lateinit var computerImgView: List<ImageView>
+    private lateinit var playerImgView: List<ImageView>
+    private lateinit var computerImgView: List<ImageView>
     private var playerDiceArray = mutableListOf<Int>()
     private var computerDiceArray = mutableListOf<Int>()
     private var playerScore = 0
@@ -93,7 +93,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
         reRollbtn.setOnClickListener {
-            //once reroll is called it substarts the throw dice total because reroll will roll that saem turn again
+            //once reroll is called it subtracts the throw dice total because re-roll will roll that same turn again
             playerScore -= playerDiceArray.sum()
             if (optionalRollCount!=0){
                 optionalRollCount--
