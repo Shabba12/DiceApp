@@ -9,6 +9,20 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/startScreenText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test your luck "
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/profile_picture"
         android:layout_width="150dp"
@@ -34,11 +48,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_picture">
 
+        <EditText
+            android:id="@+id/editTextNumber"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/button_theme"
+            android:ems="10"
+            android:hint="Enter Target"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:textColorHint="@color/black" />
+
         <Button
             android:id="@+id/newGameBtn"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/button_theme"
             android:text="@string/new_game"
             android:textColor="@color/black"
@@ -57,19 +85,5 @@
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/startScreenText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Test your luck "
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/profile_picture"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

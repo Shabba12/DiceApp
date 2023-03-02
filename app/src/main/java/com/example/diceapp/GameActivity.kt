@@ -24,6 +24,7 @@ class GameActivity : AppCompatActivity() {
     private var playerRollCount = 0
     private var optionalRollCount = 2
     private var selectedRoll = mutableListOf<Int>()
+    private var targetValue = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +34,8 @@ class GameActivity : AppCompatActivity() {
         val throwButton = findViewById<Button>(R.id.throwbtn)
         val scoreBtn = findViewById<Button>(R.id.scoreBtn)
         val reRollbtn = findViewById<Button>(R.id.reRollBtn)
+        targetValue = intent.getIntExtra("target",101)
+
 
         playerImgView = listOf(
             findViewById(R.id.hRoll1),
@@ -130,9 +133,9 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun checkScore() {
-        if (playerScore >= 101) {
+        if (playerScore >= targetValue) {
             displayPopup("You win!", Color.GREEN)
-        } else if (computerScore >= 101) {
+        } else if (computerScore >= targetValue) {
             displayPopup("You lose", Color.RED)
         }
     }
