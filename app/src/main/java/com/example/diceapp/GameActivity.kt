@@ -1,13 +1,17 @@
 package com.example.diceapp
 
 
+import android.content.DialogInterface
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
@@ -62,7 +66,6 @@ class GameActivity : AppCompatActivity() {
                 playerRollCount++
 
                 totalScore()
-                scoreBtn.performClick()
                 playerImgView[0].setOnClickListener{
                     selectedRoll.add(0)
                     Toast.makeText(this,"Roll 1 selected",Toast.LENGTH_SHORT).show()
@@ -101,16 +104,52 @@ class GameActivity : AppCompatActivity() {
                 showDiceImages(playerDiceArray,playerImgView)
                 //adds the reroll value to the score board
                 playerScore += playerDiceArray.sum()
-                scoreBtn.performClick()
+
             }else{
                 Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
+                playerScore += playerDiceArray.sum()
             }
         }
         scoreBtn.setOnClickListener {
 //            totalScore()
             playerRollCount = 0
             showScore()
+            playerDiceArray.clear()
+            computerDiceArray.clear()
+            selectedRoll.clear()
+            checkScore()
+            setDefaultImage(playerImgView)
+            setDefaultImage(computerImgView)
         }
+    }
+
+    private fun setDefaultImage(diceImageViews: List<ImageView>) {
+        for (i in diceImageViews){
+            i.setImageResource(R.drawable.rolling_cup)
+        }
+    }
+
+    private fun checkScore() {
+        if (playerScore >= 101) {
+            displayPopup("You win!", Color.GREEN)
+        } else if (computerScore >= 101) {
+            displayPopup("You lose", Color.RED)
+        }
+    }
+
+    private fun displayPopup(result: String, color: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(result)
+            .setPositiveButton("OK", null)
+        // Disable all clicking features for the activity
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
+        val dialog = builder.create()
+        dialog.show()
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+        dialog.findViewById<TextView>(android.R.id.message)?.setTextColor(color)
     }
 
     private fun rollSelectedDice(selectedRoll: MutableList<Int>, playerDiceArray: MutableList<Int>) {
