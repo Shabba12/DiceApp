@@ -185,13 +185,6 @@ class GameActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.scoreTextView).text = viewScore
     }
 
-    private fun addScore(DiceArray: MutableList<Int>): Int {
-        var tot = 0
-        for (i in DiceArray){
-            tot+= i
-        }
-        return tot
-    }
 
     private fun showDiceImages(values: MutableList<Int>, humanImgView: List<ImageView>) {
 
