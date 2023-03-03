@@ -6,4 +6,6 @@
     <string name="new_game">New Game</string>
     <string name="plagarism_text">SHABEER NUHMAN \nStudent ID: w1868567 \n\nI confirm that I understand what plagiarism is and have read and understood the section on Assessment Offences in the Essential Information for Students.The work that I have submitted is entirely my own. Any work from other authors is duly referenced and acknowledged.</string>
     <string name="score">Score</string>
+    <string name="test_your_luck">Test your luck</string>
+    <string name="enter_target">Enter Target</string>
 </resources>
