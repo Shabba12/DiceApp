@@ -23,10 +23,12 @@ class GameActivity : AppCompatActivity() {
     private var computerScore = 0
     private var playerRollCount = 0
     private var optionalRollCount = 2
-    private var selectedRoll = mutableListOf<Int>()
+    private var playerSelectedRoll = mutableListOf<Int>()
+    private var computerSelectedRoll = mutableListOf<Int>()
     private var targetValue = 0
-    private var tempPlayerScore =0
-    private var tempComputerScore =0
+    private var tempPlayerScore = 0
+    private var tempComputerScore = 0
+    private lateinit var computerMessage:TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,7 @@ class GameActivity : AppCompatActivity() {
         val throwButton = findViewById<Button>(R.id.throwbtn)
         val scoreBtn = findViewById<Button>(R.id.scoreBtn)
         val reRollbtn = findViewById<Button>(R.id.reRollBtn)
+        computerMessage = findViewById(R.id.computerMessage)
         targetValue = intent.getIntExtra("target",101)
 
 
@@ -72,29 +75,30 @@ class GameActivity : AppCompatActivity() {
                 tempComputerScore = computerDiceArray.sum()
 
                 playerImgView[0].setOnClickListener{
-                    selectedRoll.add(0)
+                    playerSelectedRoll.add(0)
                     Toast.makeText(this,"Roll 1 selected",Toast.LENGTH_SHORT).show()
                 }
                 playerImgView[1].setOnClickListener{
-                    selectedRoll.add(1)
+                    playerSelectedRoll.add(1)
                     Toast.makeText(this,"Roll 2 selected",Toast.LENGTH_SHORT).show()
                 }
                 playerImgView[2].setOnClickListener{
-                    selectedRoll.add(2)
+                    playerSelectedRoll.add(2)
                     Toast.makeText(this,"Roll 3 selected",Toast.LENGTH_SHORT).show()
                 }
                 playerImgView[3].setOnClickListener{
-                    selectedRoll.add(3)
+                    playerSelectedRoll.add(3)
                     Toast.makeText(this,"Roll 4 selected",Toast.LENGTH_SHORT).show()
                 }
                 playerImgView[4].setOnClickListener{
-                    selectedRoll.add(4)
+                    playerSelectedRoll.add(4)
                     Toast.makeText(this,"Roll 5 selected",Toast.LENGTH_SHORT).show()
                 }
 
                 reRollbtn.visibility = View.VISIBLE
 
-
+                computerStrategy()
+                optionalRollCount = 2
 
             }else{
                 Toast.makeText(this,"Maximum rolls reached!",Toast.LENGTH_SHORT).show()
@@ -104,33 +108,36 @@ class GameActivity : AppCompatActivity() {
         reRollbtn.setOnClickListener {
             //once reroll is called it subtracts the throw dice total because re-roll will roll that same turn again
             tempPlayerScore -= playerDiceArray.sum()
-            if (optionalRollCount!=0){
-                optionalRollCount--
-                rollSelectedDice(selectedRoll,playerDiceArray)
-                showDiceImages(playerDiceArray,playerImgView)
-                //adds the reroll value to the score board
-                tempPlayerScore = playerDiceArray.sum()
-
-            }else{
-                Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
-                tempPlayerScore = playerDiceArray.sum()
-            }
+            reRolldices(playerDiceArray,playerSelectedRoll,playerImgView)
+            tempPlayerScore = playerDiceArray.sum()
+//            tempPlayerScore -= playerDiceArray.sum()
+//            if (optionalRollCount!=0){
+//                optionalRollCount--
+//                rollSelectedDice(playerSelectedRoll,playerDiceArray)
+//                showDiceImages(playerDiceArray,playerImgView)
+//                //adds the reroll value to the score board
+//                tempPlayerScore = playerDiceArray.sum()
+//
+//            }else{
+//                Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
+//                tempPlayerScore = playerDiceArray.sum()
+//            }
         }
 
 
         scoreBtn.setOnClickListener {
 //            totalScore()
             playerScore += tempPlayerScore
+            computerScore += tempComputerScore
             showScore()
             if (playerScore >= targetValue){
                 displayPopup("You win!", Color.GREEN)
             }else{
-                computerScore += tempComputerScore
-                showScore()
                 if (computerScore >= targetValue){
                     displayPopup("You lose", Color.RED)
                 }else if (playerScore == computerScore){
                     displayPopup("tie", Color.CYAN)
+                    reRollbtn.isEnabled = false
                 }
             }
 //            showScore()
@@ -140,10 +147,46 @@ class GameActivity : AppCompatActivity() {
             playerRollCount = 0
             playerDiceArray.clear()
             computerDiceArray.clear()
-            selectedRoll.clear()
+            playerSelectedRoll.clear()
+            computerSelectedRoll.clear()
+            computerMessage.text = ""
             reRollbtn.visibility = View.INVISIBLE
             setDefaultImage(playerImgView)
             setDefaultImage(computerImgView)
+        }
+    }
+
+    private fun reRolldices(
+        DiceArray: MutableList<Int>,
+        SelectedRoll: MutableList<Int>,
+        ImgView: List<ImageView>
+    ) {
+//        tempScore -= DiceArray.sum()
+        if (optionalRollCount!=0){
+            optionalRollCount--
+            rollSelectedDice(SelectedRoll,DiceArray)
+            showDiceImages(DiceArray,ImgView)
+            //adds the reroll value to the score board
+//            tempScore = DiceArray.sum()
+
+        }else{
+            Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
+//            tempScore = DiceArray.sum()
+        }
+    }
+
+    private fun computerStrategy() {
+        val toReRoll = Random.nextInt(1,10)
+        if (toReRoll % 2 == 0 ){
+            optionalRollCount = 3
+            computerSelectedRoll.add(Random.nextInt(0,4))
+            computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
+            tempComputerScore -= computerDiceArray.sum()
+            reRolldices(computerDiceArray,computerSelectedRoll,computerImgView)
+            tempComputerScore = computerDiceArray.sum()
+
+        }else{
+            computerMessage.text = "Im happy with the result"
         }
     }
 
@@ -176,15 +219,15 @@ class GameActivity : AppCompatActivity() {
         dialog.findViewById<TextView>(android.R.id.message)?.setTextColor(color)
     }
 
-    private fun rollSelectedDice(selectedRoll: MutableList<Int>, playerDiceArray: MutableList<Int>) {
+    private fun rollSelectedDice(selectedRoll: MutableList<Int>, DiceArray: MutableList<Int>) {
         println(selectedRoll)
-        println(playerDiceArray)
-        for (i in 0 until playerDiceArray.size){
+        println(DiceArray)
+        for (i in 0 until DiceArray.size){
             if (!selectedRoll.contains(i)){
-                playerDiceArray[i] = Random.nextInt(1, 7)
+                DiceArray[i] = Random.nextInt(1, 7)
             }
         }
-        println(playerDiceArray)
+        println(DiceArray)
     }
 
     private fun rollDice() {
@@ -202,7 +245,7 @@ class GameActivity : AppCompatActivity() {
         playerRollCount = 0
         playerDiceArray.clear()
         computerDiceArray.clear()
-        selectedRoll.clear()
+        playerSelectedRoll.clear()
 
     }
 

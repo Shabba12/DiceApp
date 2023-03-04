@@ -74,7 +74,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="400dp"
         android:layout_height="80dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -187,13 +187,15 @@
 
     <TextView
         android:id="@+id/computerMessage"
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/message_display_box"
         android:gravity="center"
-        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toTopOf="parent" />
