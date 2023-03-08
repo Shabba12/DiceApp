@@ -19,8 +19,8 @@ class GameActivity : AppCompatActivity() {
     private lateinit var computerImgView: List<ImageView>
     private var playerDiceArray = mutableListOf<Int>()
     private var computerDiceArray = mutableListOf<Int>()
-    private var playerScore = 0
-    private var computerScore = 0
+    private var playerScore = 40
+    private var computerScore = 40
     private var playerRollCount = 0
     private var optionalRollCount = 2
     private var playerSelectedRoll = mutableListOf<Int>()
@@ -29,6 +29,9 @@ class GameActivity : AppCompatActivity() {
     private var tempPlayerScore = 0
     private var tempComputerScore = 0
     private lateinit var computerMessage:TextView
+    private var tieScore = false
+    private var playerAttemptsMade = 0
+    private var computerAttemptsMade = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +43,9 @@ class GameActivity : AppCompatActivity() {
         val reRollbtn = findViewById<Button>(R.id.reRollBtn)
         computerMessage = findViewById(R.id.computerMessage)
         targetValue = intent.getIntExtra("target",101)
-
+        if (tieScore){
+            reRollbtn.isEnabled = false
+        }
 
         playerImgView = listOf(
             findViewById(R.id.hRoll1),
@@ -100,6 +105,7 @@ class GameActivity : AppCompatActivity() {
                 computerStrategy()
                 optionalRollCount = 2
 
+
             }else{
                 Toast.makeText(this,"Maximum rolls reached!",Toast.LENGTH_SHORT).show()
             }
@@ -129,19 +135,29 @@ class GameActivity : AppCompatActivity() {
 //            totalScore()
             playerScore += tempPlayerScore
             computerScore += tempComputerScore
+            playerAttemptsMade++
+            computerAttemptsMade++
             showScore()
-            if (playerScore >= targetValue){
-                displayPopup("You win!", Color.GREEN)
+
+            if (!tieScore) {
+                if (playerScore >= targetValue || computerScore >= targetValue) {
+                    // Determine winner based on score and attempts
+                    if (playerScore > computerScore || (playerScore == computerScore && playerAttemptsMade < computerAttemptsMade)) {
+                        displayPopup("You win!", Color.GREEN)
+                    } else if (playerScore == computerScore) {
+                        tieScore = true
+                        displayPopup("tie", Color.CYAN)
+                    } else {
+                        displayPopup("You lose", Color.RED)
+                    }
+                }
             }else{
-                if (computerScore >= targetValue){
+                if (playerScore> computerScore){
+                    displayPopup("You win!", Color.GREEN)
+                }else if (computerScore>playerScore){
                     displayPopup("You lose", Color.RED)
-                }else if (playerScore == computerScore){
-                    displayPopup("tie", Color.CYAN)
-                    reRollbtn.isEnabled = false
                 }
             }
-//            showScore()
-//            checkScore()
             tempPlayerScore = 0
             tempComputerScore = 0
             playerRollCount = 0
@@ -176,14 +192,17 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun computerStrategy() {
+
         val toReRoll = Random.nextInt(1,10)
         if (toReRoll % 2 == 0 ){
-            optionalRollCount = 3
+
+            optionalRollCount = 2
             computerSelectedRoll.add(Random.nextInt(0,4))
             computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
             tempComputerScore -= computerDiceArray.sum()
             reRolldices(computerDiceArray,computerSelectedRoll,computerImgView)
             tempComputerScore = computerDiceArray.sum()
+
 
         }else{
             computerMessage.text = "Im happy with the result"
@@ -196,23 +215,20 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkScore() {
-        if (playerScore >= targetValue) {
-            displayPopup("You win!", Color.GREEN)
-        } else if (computerScore >= targetValue) {
-            displayPopup("You lose", Color.RED)
-        }
-    }
-
     private fun displayPopup(result: String, color: Int) {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage(result)
-            .setPositiveButton("OK", null)
-        // Disable all clicking features for the activity
+        if(!tieScore) {
+            builder.setMessage(result)
+                .setPositiveButton("OK", null)
+            // Disable all clicking features for the activity
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
             )
+        }else{
+            builder.setMessage(result)
+                .setPositiveButton("OK", null)
+        }
         val dialog = builder.create()
         dialog.show()
         dialog.getButton(DialogInterface.BUTTON_POSITIVE)
@@ -268,7 +284,6 @@ class GameActivity : AppCompatActivity() {
         for (i in humanImgView.indices){
             humanImgView[i].setImageResource(imageId[values[i]-1])
         }
-        println(values)
 
     }
 
