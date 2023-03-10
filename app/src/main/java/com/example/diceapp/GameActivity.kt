@@ -1,7 +1,9 @@
 package com.example.diceapp
 
 
+import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,6 +34,15 @@ class GameActivity : AppCompatActivity() {
     private var tieScore = false
     private var playerAttemptsMade = 0
     private var computerAttemptsMade = 0
+//    private var humanWinScore = 3
+//    private var computerWinScore = 3
+//    private val PREFS_NAME = "MyPrefs"
+//    private val USER_WINS_KEY = "userWins"
+//    private val COMPUTER_WINS_KEY = "computerWins"
+    companion object {
+        var totalHumanWins = 0
+        var totalComputerWins = 0
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +52,16 @@ class GameActivity : AppCompatActivity() {
         val throwButton = findViewById<Button>(R.id.throwbtn)
         val scoreBtn = findViewById<Button>(R.id.scoreBtn)
         val reRollbtn = findViewById<Button>(R.id.reRollBtn)
+        val winScoreText = findViewById<TextView>(R.id.WinScoreText)
         computerMessage = findViewById(R.id.computerMessage)
         targetValue = intent.getIntExtra("target",101)
         if (tieScore){
             reRollbtn.isEnabled = false
         }
+//        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+//        humanWinScore = prefs.getInt(USER_WINS_KEY, 0)
+//        computerWinScore = prefs.getInt(COMPUTER_WINS_KEY, 0)
+        winScoreText.text ="H: $totalHumanWins/C: $totalComputerWins"
 
         playerImgView = listOf(
             findViewById(R.id.hRoll1),
@@ -116,23 +132,11 @@ class GameActivity : AppCompatActivity() {
             tempPlayerScore -= playerDiceArray.sum()
             reRolldices(playerDiceArray,playerSelectedRoll,playerImgView)
             tempPlayerScore = playerDiceArray.sum()
-//            tempPlayerScore -= playerDiceArray.sum()
-//            if (optionalRollCount!=0){
-//                optionalRollCount--
-//                rollSelectedDice(playerSelectedRoll,playerDiceArray)
-//                showDiceImages(playerDiceArray,playerImgView)
-//                //adds the reroll value to the score board
-//                tempPlayerScore = playerDiceArray.sum()
-//
-//            }else{
-//                Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
-//                tempPlayerScore = playerDiceArray.sum()
-//            }
         }
 
 
         scoreBtn.setOnClickListener {
-//            totalScore()
+
             playerScore += tempPlayerScore
             computerScore += tempComputerScore
             playerAttemptsMade++
@@ -144,11 +148,13 @@ class GameActivity : AppCompatActivity() {
                     // Determine winner based on score and attempts
                     if (playerScore > computerScore || (playerScore == computerScore && playerAttemptsMade < computerAttemptsMade)) {
                         displayPopup("You win!", Color.GREEN)
+                        totalHumanWins++
                     } else if (playerScore == computerScore) {
                         tieScore = true
                         displayPopup("tie", Color.CYAN)
                     } else {
                         displayPopup("You lose", Color.RED)
+                        totalComputerWins++
                     }
                 }
             }else{
@@ -171,6 +177,32 @@ class GameActivity : AppCompatActivity() {
             setDefaultImage(computerImgView)
         }
     }
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//
+////        savePrefs()
+//    }
+
+//    private fun savePrefs() {
+//        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+//        val editor = prefs.edit()
+//        editor.putInt(USER_WINS_KEY, humanWinScore)
+//        editor.putInt(COMPUTER_WINS_KEY, computerWinScore)
+//        editor.apply()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        savePrefs()
+//    }
+override fun onDestroy() {
+    super.onDestroy()
+    totalHumanWins = totalHumanWins
+    totalComputerWins  = totalComputerWins
+}
+
+
+
 
     private fun reRolldices(
         DiceArray: MutableList<Int>,
