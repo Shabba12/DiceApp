@@ -1,9 +1,8 @@
 package com.example.diceapp
 
 
-import android.content.Context
+
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,15 +13,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import java.io.Serializable
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 class GameActivity : AppCompatActivity() {
     private lateinit var playerImgView: List<ImageView>
     private lateinit var computerImgView: List<ImageView>
     private var playerDiceArray = mutableListOf<Int>()
     private var computerDiceArray = mutableListOf<Int>()
-    private var playerScore = 40
-    private var computerScore = 40
+    private var playerScore = 0
+    private var computerScore = 0
     private var playerRollCount = 0
     private var optionalRollCount = 2
     private var playerSelectedRoll = mutableListOf<Int>()
@@ -34,11 +35,6 @@ class GameActivity : AppCompatActivity() {
     private var tieScore = false
     private var playerAttemptsMade = 0
     private var computerAttemptsMade = 0
-//    private var humanWinScore = 3
-//    private var computerWinScore = 3
-//    private val PREFS_NAME = "MyPrefs"
-//    private val USER_WINS_KEY = "userWins"
-//    private val COMPUTER_WINS_KEY = "computerWins"
     companion object {
         var totalHumanWins = 0
         var totalComputerWins = 0
@@ -49,18 +45,35 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        if (savedInstanceState != null) {
+            val savedState = savedInstanceState.getSerializable("savedState") as? Map<String, Any>
+            if (savedState != null) {
+                playerScore = savedState["playerScore"] as? Int ?: playerScore
+                computerScore = savedState["computerScore"] as? Int ?: computerScore
+                playerRollCount = savedState["playerRollCount"] as? Int ?: playerRollCount
+                optionalRollCount = savedState["optionalRollCount"] as? Int ?: optionalRollCount
+                playerSelectedRoll = savedState["playerSelectedRoll"] as? MutableList<Int> ?: playerSelectedRoll
+                computerSelectedRoll = savedState["computerSelectedRoll"] as? MutableList<Int> ?: computerSelectedRoll
+                targetValue = savedState["targetValue"] as? Int ?: targetValue
+                tempPlayerScore = savedState["tempPlayerScore"] as? Int ?: tempPlayerScore
+                tempComputerScore = savedState["tempComputerScore"] as? Int ?: tempComputerScore
+                tieScore = savedState["tieScore"] as? Boolean ?: tieScore
+                playerAttemptsMade = savedState["playerAttemptsMade"] as? Int ?: playerAttemptsMade
+                computerAttemptsMade = savedState["computerAttemptsMade"] as? Int ?: computerAttemptsMade
+            }
+        }
+
         val throwButton = findViewById<Button>(R.id.throwbtn)
         val scoreBtn = findViewById<Button>(R.id.scoreBtn)
         val reRollbtn = findViewById<Button>(R.id.reRollBtn)
         val winScoreText = findViewById<TextView>(R.id.WinScoreText)
         computerMessage = findViewById(R.id.computerMessage)
         targetValue = intent.getIntExtra("target",101)
+
         if (tieScore){
             reRollbtn.isEnabled = false
         }
-//        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-//        humanWinScore = prefs.getInt(USER_WINS_KEY, 0)
-//        computerWinScore = prefs.getInt(COMPUTER_WINS_KEY, 0)
+
         winScoreText.text ="H: $totalHumanWins/C: $totalComputerWins"
 
         playerImgView = listOf(
@@ -78,8 +91,6 @@ class GameActivity : AppCompatActivity() {
             findViewById(R.id.cRoll4),
             findViewById(R.id.cRoll5)
         )
-
-
 
         throwButton.setOnClickListener {
             optionalRollCount = 2
@@ -177,29 +188,35 @@ class GameActivity : AppCompatActivity() {
             setDefaultImage(computerImgView)
         }
     }
-//    override fun onBackPressed() {
-//        super.onBackPressed()
-//
-////        savePrefs()
-//    }
 
-//    private fun savePrefs() {
-//        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-//        val editor = prefs.edit()
-//        editor.putInt(USER_WINS_KEY, humanWinScore)
-//        editor.putInt(COMPUTER_WINS_KEY, computerWinScore)
-//        editor.apply()
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        savePrefs()
-//    }
-override fun onDestroy() {
-    super.onDestroy()
-    totalHumanWins = totalHumanWins
-    totalComputerWins  = totalComputerWins
-}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        totalHumanWins = totalHumanWins
+        totalComputerWins  = totalComputerWins
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        // Save the variables in a map
+        val savedState = mapOf(
+            "playerScore" to playerScore,
+            "computerScore" to computerScore,
+            "playerRollCount" to playerRollCount,
+            "optionalRollCount" to optionalRollCount,
+            "playerSelectedRoll" to playerSelectedRoll,
+            "computerSelectedRoll" to computerSelectedRoll,
+            "targetValue" to targetValue,
+            "tempPlayerScore" to tempPlayerScore,
+            "tempComputerScore" to tempComputerScore,
+            "tieScore" to tieScore,
+            "playerAttemptsMade" to playerAttemptsMade,
+            "computerAttemptsMade" to computerAttemptsMade
+        )
+
+        // Store the map in the bundle
+        outState.putSerializable("savedState", savedState as Serializable)
+    }
 
 
 
@@ -227,17 +244,26 @@ override fun onDestroy() {
 
         val toReRoll = Random.nextInt(1,10)
         if (toReRoll % 2 == 0 ){
-
             optionalRollCount = 2
-            computerSelectedRoll.add(Random.nextInt(0,4))
+            for (i in 0 until Random.nextInt(0,4)){
+                computerSelectedRoll.add(Random.nextInt(0,4))
+            }
+//            computerSelectedRoll.add(Random.nextInt(0,4))
             computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
             tempComputerScore -= computerDiceArray.sum()
             reRolldices(computerDiceArray,computerSelectedRoll,computerImgView)
             tempComputerScore = computerDiceArray.sum()
-
-
         }else{
             computerMessage.text = "Im happy with the result"
+        }
+
+        //algorithm
+        if (computerScore<playerScore-20){
+            for (i in 0 until  computerDiceArray.size){
+                if (computerDiceArray[i]>4){
+                    computerSelectedRoll.add(i)
+                }
+            }
         }
     }
 
