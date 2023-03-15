@@ -60,6 +60,9 @@ class GameActivity : AppCompatActivity() {
                 tieScore = savedState["tieScore"] as? Boolean ?: tieScore
                 playerAttemptsMade = savedState["playerAttemptsMade"] as? Int ?: playerAttemptsMade
                 computerAttemptsMade = savedState["computerAttemptsMade"] as? Int ?: computerAttemptsMade
+                playerDiceArray = savedState["playerDiceArray"] as? MutableList<Int> ?: playerDiceArray
+                computerDiceArray = savedState["computerDiceArray"] as? MutableList<Int> ?: computerDiceArray
+
             }
         }
 
@@ -91,6 +94,15 @@ class GameActivity : AppCompatActivity() {
             findViewById(R.id.cRoll4),
             findViewById(R.id.cRoll5)
         )
+        //if the playerDiceArray is not empty it was destroyed in a state where the dice was rolled
+        if (playerDiceArray.isNotEmpty()){
+            showDiceImages(playerDiceArray, playerImgView)
+            showDiceImages(computerDiceArray, computerImgView)
+            if (optionalRollCount<2){
+                //if the optional count is not 2 then the user has re rolled before destroying
+                reRollbtn.visibility = View.VISIBLE
+            }
+        }
 
         throwButton.setOnClickListener {
             optionalRollCount = 2
@@ -131,6 +143,9 @@ class GameActivity : AppCompatActivity() {
 
                 computerStrategy()
                 optionalRollCount = 2
+                // to disable throw button once is it hit unless the score button is clicked the throw button will stay disabled
+                throwButton.isEnabled = false
+                scoreBtn.visibility = View.VISIBLE
 
 
             }else{
@@ -182,8 +197,10 @@ class GameActivity : AppCompatActivity() {
             computerDiceArray.clear()
             playerSelectedRoll.clear()
             computerSelectedRoll.clear()
+            throwButton.isEnabled = true
             computerMessage.text = ""
             reRollbtn.visibility = View.INVISIBLE
+            scoreBtn.visibility = View.INVISIBLE
             setDefaultImage(playerImgView)
             setDefaultImage(computerImgView)
         }
@@ -211,7 +228,9 @@ class GameActivity : AppCompatActivity() {
             "tempComputerScore" to tempComputerScore,
             "tieScore" to tieScore,
             "playerAttemptsMade" to playerAttemptsMade,
-            "computerAttemptsMade" to computerAttemptsMade
+            "computerAttemptsMade" to computerAttemptsMade,
+            "playerDiceArray" to playerDiceArray,
+            "computerDiceArray" to computerDiceArray
         )
 
         // Store the map in the bundle
@@ -251,20 +270,32 @@ class GameActivity : AppCompatActivity() {
 //            computerSelectedRoll.add(Random.nextInt(0,4))
             computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
             tempComputerScore -= computerDiceArray.sum()
-            reRolldices(computerDiceArray,computerSelectedRoll,computerImgView)
+            reRolldices(computerDiceArray, computerSelectedRoll, computerImgView)
             tempComputerScore = computerDiceArray.sum()
         }else{
             computerMessage.text = "Im happy with the result"
         }
 
-        //algorithm
-        if (computerScore<playerScore-20){
-            for (i in 0 until  computerDiceArray.size){
-                if (computerDiceArray[i]>4){
-                    computerSelectedRoll.add(i)
-                }
-            }
-        }
+        //algorithm to check if computer score is less than 20 points of the player score if so will re roll based on the highest numbers in rolled
+//        if (playerScore < 40 ){
+//            for (i in 0..4){
+//                computerSelectedRoll.add(i)
+//                computerReRoll()
+//            }
+//        }else if ((playerScore>40 && playerScore<60) && (computerDiceArray.contains(5)||computerDiceArray.contains(6))){
+//            for (i in 0 until computerDiceArray.size){
+//                if (computerDiceArray[i]>5){
+//                    computerSelectedRoll.add(computerDiceArray.indexOf(computerDiceArray[i]))
+//                }
+//            }
+//        }
+    }
+
+    private fun computerReRoll() {
+        computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
+        tempComputerScore -= computerDiceArray.sum()
+        reRolldices(computerDiceArray, computerSelectedRoll, computerImgView)
+        tempComputerScore = computerDiceArray.sum()
     }
 
     private fun setDefaultImage(diceImageViews: List<ImageView>) {
