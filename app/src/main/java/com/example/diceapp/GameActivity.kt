@@ -281,10 +281,7 @@ class GameActivity : AppCompatActivity() {
         //If the computer's score is less than 20 and the player's score is less than 30, keep all five dice and roll again.
         if (computerScore<(targetValue*0.2) && playerScore<(targetValue*0.3)){
             println("Rule 1")
-            for (i in 0..4){
-                computerSelectedRoll.add(i)
-            }
-            computerReRoll()
+            computerMessage.text = "Im happy with the result"
         }else if ((computerScore>targetValue*0.2 && computerScore<targetValue*0.4) && playerScore<targetValue*0.4){
             println("Rule 2")
             //If the computer's score is between 20 and 39 and the player's score is less than 40, keep any dice that show 4 or higher and roll the remaining dice again.
@@ -449,3 +446,12 @@ class GameActivity : AppCompatActivity() {
     }
 
 }
+
+
+//The above strategy is a decision-making algorithm for a computer player in a game of dice, where the objective is to be the first to reach 100 points. The algorithm provides guidelines on when to go for a re-roll and which dice to re-roll based on the computer's and the player's scores.
+//
+//The justification for this strategy is that it takes into account the current score of both players and balances the risk of going for a re-roll with the potential reward of getting a higher score. By keeping a certain number of dice and re-rolling others, the computer can increase its chances of getting a better combination that could lead to a higher score.
+//
+//One advantage of this strategy is that it's adaptable to different game situations, allowing the computer to adjust its approach based on the current score of both players. Another advantage is that it balances the risk and reward of going for a re-roll, which can help the computer make more informed decisions.
+//
+//One disadvantage of this strategy is that it relies heavily on chance, as the outcome of each roll is unpredictable. Additionally, the strategy may not work well if the computer is facing an opponent who is more experienced or skilled in the game. Finally, the strategy does not take into account any potential psychological factors or bluffing strategies that the opponent may be using, which could influence the outcome of the game.
