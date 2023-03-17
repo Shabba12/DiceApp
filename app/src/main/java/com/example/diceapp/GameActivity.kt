@@ -28,8 +28,8 @@ class GameActivity : AppCompatActivity() {
     private var playerSelectedRoll = mutableListOf<Int>()
     private var computerSelectedRoll = mutableListOf<Int>()
     private var targetValue = 0
-    private var tempPlayerScore = 0
-    private var tempComputerScore = 0
+    private var tempPlayerScore = 110
+    private var tempComputerScore = 110
     private lateinit var computerMessage:TextView
     private var tieScore = false
     private var playerAttemptsMade = 0
@@ -97,10 +97,14 @@ class GameActivity : AppCompatActivity() {
         if (playerDiceArray.isNotEmpty()){
             showDiceImages(playerDiceArray, playerImgView)
             showDiceImages(computerDiceArray, computerImgView)
+
             if (optionalRollCount<2){
                 //if the optional count is not 2 then the user has re rolled before destroying
                 reRollbtn.visibility = View.VISIBLE
             }
+        }
+        if (playerScore>0){
+            showScore()
         }
 
         throwButton.setOnClickListener {
@@ -138,7 +142,9 @@ class GameActivity : AppCompatActivity() {
                     Toast.makeText(this,"Roll 5 selected",Toast.LENGTH_SHORT).show()
                 }
 
-                reRollbtn.visibility = View.VISIBLE
+                if (!tieScore){
+                    reRollbtn.visibility = View.VISIBLE
+                }
 
                 computerStrategy()
                 optionalRollCount = 2
@@ -184,9 +190,13 @@ class GameActivity : AppCompatActivity() {
                 }
             }else{
                 if (playerScore> computerScore){
+                    tieScore = false
                     displayPopup("You win!", Color.GREEN)
+                    totalHumanWins++
                 }else if (computerScore>playerScore){
+                    tieScore = false
                     displayPopup("You lose", Color.RED)
+                    totalComputerWins++
                 }
             }
             tempPlayerScore = 0
@@ -278,89 +288,92 @@ class GameActivity : AppCompatActivity() {
         //algorithm to check if computer score is less than 20 points of the player score if so will re roll based on the highest numbers in rolled
 
         //If the computer's score is less than 20 and the player's score is less than 30, keep all five dice and roll again.
-        if (computerScore<(targetValue*0.2) && playerScore<(targetValue*0.3)){
-            println("Rule 1")
-            computerMessage.text = "Im happy with the result"
-        }else if ((computerScore>targetValue*0.2 && computerScore<targetValue*0.4) && playerScore<targetValue*0.4){
-            println("Rule 2")
-            //If the computer's score is between 20 and 39 and the player's score is less than 40, keep any dice that show 4 or higher and roll the remaining dice again.
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 4){
-                    computerSelectedRoll.add(i)
+        if (!tieScore){
+            if (computerScore<(targetValue*0.2) && playerScore<(targetValue*0.3)){
+                println("Rule 1")
+                computerMessage.text = "Im happy with the result"
+            }else if ((computerScore>=targetValue*0.2 && computerScore<targetValue*0.4) && playerScore<targetValue*0.4){
+                println("Rule 2")
+                //If the computer's score is between 20 and 39 and the player's score is less than 40, keep any dice that show 4 or higher and roll the remaining dice again.
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 4){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-            computerSelectedRoll.clear()
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 4){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+                computerSelectedRoll.clear()
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 4){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-        }else if ((computerScore>targetValue*0.4 && computerScore<targetValue*0.5) && playerScore<targetValue*0.6){
-            println("Rule 3")
-            //If the computer's score is between 40 and 59 and the player's score is less than 60, keep any dice that show 5 or higher and roll the remaining dice again.
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 5){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+            }else if ((computerScore>=targetValue*0.4 && computerScore<targetValue*0.6) && playerScore<targetValue*0.6){
+                println("Rule 3")
+                //If the computer's score is between 40 and 59 and the player's score is less than 60, keep any dice that show 5 or higher and roll the remaining dice again.
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 5){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-            computerSelectedRoll.clear()
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 5){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+                computerSelectedRoll.clear()
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 5){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-        }else if ((computerScore>targetValue*0.6 && computerScore<targetValue*0.7) && playerScore<targetValue*0.8){
-            println("Rule 4")
-            //If the computer's score is between 60 and 79 and the player's score is less than 80, keep any dice that show 5 or 6 and roll the remaining dice again.
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 5){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+            }else if ((computerScore>=targetValue*0.6 && computerScore<targetValue*0.8) && playerScore<targetValue*0.8){
+                println("Rule 4")
+                //If the computer's score is between 60 and 79 and the player's score is less than 80, keep any dice that show 5 or 6 and roll the remaining dice again.
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 5){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-            computerSelectedRoll.clear()
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 5){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+                computerSelectedRoll.clear()
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 5){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-        }else if (computerScore>=targetValue*0.8 && playerScore<targetValue*0.9){
-            println("Rule 5")
-            //If the computer's score is 80 or higher and the player's score is less than 90, keep any dice that show 4 or higher and roll the remaining dice again.
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 4){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+            }else if (computerScore>=targetValue*0.8 && playerScore<targetValue*0.9){
+                println("Rule 5")
+                //If the computer's score is 80 or higher and the player's score is less than 90, keep any dice that show 4 or higher and roll the remaining dice again.
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 4){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-            computerSelectedRoll.clear()
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 4){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+                computerSelectedRoll.clear()
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 4){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-        }else if (playerScore>= targetValue*0.9){
-            println("Rule 6")
-            //If the player's score is 90 or higher, keep any dice that show 3 or higher and roll the remaining dice again, regardless of the computer's score.
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 3){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+            }else if (playerScore>= targetValue*0.9){
+                println("Rule 6")
+                //If the player's score is 90 or higher, keep any dice that show 3 or higher and roll the remaining dice again, regardless of the computer's score.
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 3){
+                        computerSelectedRoll.add(i)
+                    }
                 }
-            }
-            computerReRoll()
-            computerSelectedRoll.clear()
-            for (i in 0 until computerDiceArray.size){
-                if (computerDiceArray[i] >= 3){
-                    computerSelectedRoll.add(i)
+                computerReRoll()
+                computerSelectedRoll.clear()
+                for (i in 0 until computerDiceArray.size){
+                    if (computerDiceArray[i] >= 3){
+                        computerSelectedRoll.add(i)
+                    }
                 }
+                computerReRoll()
             }
-            computerReRoll()
+            //if none of the conditions are met computer will not go for any rerolls
         }
     }
 
