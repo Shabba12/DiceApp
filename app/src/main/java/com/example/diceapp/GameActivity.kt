@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import java.io.Serializable
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 class GameActivity : AppCompatActivity() {
     private lateinit var playerImgView: List<ImageView>
@@ -114,7 +113,7 @@ class GameActivity : AppCompatActivity() {
                 showDiceImages(computerDiceArray, computerImgView)
                 playerRollCount++
 
-//                totalScore()
+
                 tempPlayerScore = playerDiceArray.sum()
                 tempComputerScore = computerDiceArray.sum()
 
@@ -156,7 +155,7 @@ class GameActivity : AppCompatActivity() {
         reRollbtn.setOnClickListener {
             //once reroll is called it subtracts the throw dice total because re-roll will roll that same turn again
             tempPlayerScore -= playerDiceArray.sum()
-            reRolldices(playerDiceArray,playerSelectedRoll,playerImgView)
+            reRolldices(playerDiceArray,playerSelectedRoll,playerImgView,"Player")
             tempPlayerScore = playerDiceArray.sum()
         }
 
@@ -243,19 +242,19 @@ class GameActivity : AppCompatActivity() {
     private fun reRolldices(
         DiceArray: MutableList<Int>,
         SelectedRoll: MutableList<Int>,
-        ImgView: List<ImageView>
+        ImgView: List<ImageView>,
+        s: String
     ) {
-//        tempScore -= DiceArray.sum()
+
         if (optionalRollCount!=0){
             optionalRollCount--
-            rollSelectedDice(SelectedRoll,DiceArray)
+            rollSelectedDice(SelectedRoll,DiceArray,s)
             showDiceImages(DiceArray,ImgView)
-            //adds the reroll value to the score board
-//            tempScore = DiceArray.sum()
+
 
         }else{
             Toast.makeText(this,"Maximum re-rolls reached!",Toast.LENGTH_SHORT).show()
-//            tempScore = DiceArray.sum()
+
         }
     }
 
@@ -291,6 +290,7 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             computerReRoll()
+            computerSelectedRoll.clear()
             for (i in 0 until computerDiceArray.size){
                 if (computerDiceArray[i] >= 4){
                     computerSelectedRoll.add(i)
@@ -306,6 +306,7 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             computerReRoll()
+            computerSelectedRoll.clear()
             for (i in 0 until computerDiceArray.size){
                 if (computerDiceArray[i] >= 5){
                     computerSelectedRoll.add(i)
@@ -321,6 +322,7 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             computerReRoll()
+            computerSelectedRoll.clear()
             for (i in 0 until computerDiceArray.size){
                 if (computerDiceArray[i] >= 5){
                     computerSelectedRoll.add(i)
@@ -336,6 +338,7 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             computerReRoll()
+            computerSelectedRoll.clear()
             for (i in 0 until computerDiceArray.size){
                 if (computerDiceArray[i] >= 4){
                     computerSelectedRoll.add(i)
@@ -351,6 +354,7 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             computerReRoll()
+            computerSelectedRoll.clear()
             for (i in 0 until computerDiceArray.size){
                 if (computerDiceArray[i] >= 3){
                     computerSelectedRoll.add(i)
@@ -363,7 +367,7 @@ class GameActivity : AppCompatActivity() {
     private fun computerReRoll() {
         computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
         tempComputerScore -= computerDiceArray.sum()
-        reRolldices(computerDiceArray, computerSelectedRoll, computerImgView)
+        reRolldices(computerDiceArray, computerSelectedRoll, computerImgView, "Computer")
         tempComputerScore = computerDiceArray.sum()
     }
 
@@ -393,15 +397,19 @@ class GameActivity : AppCompatActivity() {
         dialog.findViewById<TextView>(android.R.id.message)?.setTextColor(color)
     }
 
-    private fun rollSelectedDice(selectedRoll: MutableList<Int>, DiceArray: MutableList<Int>) {
-        println(selectedRoll)
-        println(DiceArray)
+    private fun rollSelectedDice(
+        selectedRoll: MutableList<Int>,
+        DiceArray: MutableList<Int>,
+        s: String
+    ) {
+        println("$s selected dice:$selectedRoll")
+        println("$s:$DiceArray")
         for (i in 0 until DiceArray.size){
             if (!selectedRoll.contains(i)){
                 DiceArray[i] = Random.nextInt(1, 7)
             }
         }
-        println(DiceArray)
+        println("$s:$DiceArray")
     }
 
     private fun rollDice() {
@@ -448,10 +456,18 @@ class GameActivity : AppCompatActivity() {
 }
 
 
-//The above strategy is a decision-making algorithm for a computer player in a game of dice, where the objective is to be the first to reach 100 points. The algorithm provides guidelines on when to go for a re-roll and which dice to re-roll based on the computer's and the player's scores.
-//
-//The justification for this strategy is that it takes into account the current score of both players and balances the risk of going for a re-roll with the potential reward of getting a higher score. By keeping a certain number of dice and re-rolling others, the computer can increase its chances of getting a better combination that could lead to a higher score.
-//
-//One advantage of this strategy is that it's adaptable to different game situations, allowing the computer to adjust its approach based on the current score of both players. Another advantage is that it balances the risk and reward of going for a re-roll, which can help the computer make more informed decisions.
-//
-//One disadvantage of this strategy is that it relies heavily on chance, as the outcome of each roll is unpredictable. Additionally, the strategy may not work well if the computer is facing an opponent who is more experienced or skilled in the game. Finally, the strategy does not take into account any potential psychological factors or bluffing strategies that the opponent may be using, which could influence the outcome of the game.
+/*
+The computer strategy above is a decision making algorithm that is implemented to be used by the computer. the objective of the strategy is to reach the target value or else 101 points(if the target is not set). The strategy is designed in a way that the computer decides whether to re roll or not if it decides to re roll which dices are selected andf re rolled.
+The algorithm is based on 6 rules and decision is made looking at the current score of the computer as well as the player score
+
+Justification:  It takes into account the current score of both players and balances the risk of going for a re-roll with the potential reward of getting a higher score. By keeping a certain number of dice and re-rolling others, the computer can increase its chances of getting a better combination that could lead to a higher score.
+
+Advantages: The accumulates the scores of both computer and player and makes its decision on what to do rather than a random selection.
+the algorithm decides on the best possible dices to keep and re roll which in turn give higher chances of getting a higher score
+brings a slight challenge for the player which makes the game interesting
+
+Disadvantages: The algorithm is relatively simple there the moves can be predicted by the player after few rounds
+the algorithm takes both re rolls if it decides to re roll. it doesn't have the capability of choosing number of times to reroll
+the algorithm does not take into account any potential psychological factors or bluffing strategies that the opponent may be using, which could influence the outcome of the game.
+
+ */
