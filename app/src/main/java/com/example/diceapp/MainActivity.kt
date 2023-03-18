@@ -4,11 +4,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.*
 
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +28,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         newGameBtn.setOnClickListener {
-            val targetValue = setTarget.text.toString().toIntOrNull()
+            var targetValue = setTarget.text.toString().toIntOrNull()
+            if (targetValue == 0){
+                Toast.makeText(this,"0 can not be set as a target default value 101 have been set!", Toast.LENGTH_SHORT).show()
+                targetValue = null
+            }
             val intent = Intent(this,GameActivity::class.java)
             intent.putExtra("target",targetValue)
             startActivity(intent)

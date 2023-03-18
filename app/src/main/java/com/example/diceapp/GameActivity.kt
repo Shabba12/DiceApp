@@ -28,8 +28,8 @@ class GameActivity : AppCompatActivity() {
     private var playerSelectedRoll = mutableListOf<Int>()
     private var computerSelectedRoll = mutableListOf<Int>()
     private var targetValue = 0
-    private var tempPlayerScore = 110
-    private var tempComputerScore = 110
+    private var tempPlayerScore = 0
+    private var tempComputerScore = 0
     private lateinit var computerMessage:TextView
     private var tieScore = false
     private var playerAttemptsMade = 0
@@ -97,8 +97,9 @@ class GameActivity : AppCompatActivity() {
         if (playerDiceArray.isNotEmpty()){
             showDiceImages(playerDiceArray, playerImgView)
             showDiceImages(computerDiceArray, computerImgView)
+            throwButton.isEnabled = false
 
-            if (optionalRollCount<2){
+            if (optionalRollCount!=0){
                 //if the optional count is not 2 then the user has re rolled before destroying
                 reRollbtn.visibility = View.VISIBLE
             }
@@ -269,29 +270,13 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun computerStrategy() {
-
-//        val toReRoll = Random.nextInt(1,10)
-//        if (toReRoll % 2 == 0 ){
-//            optionalRollCount = 2
-//            for (i in 0 until Random.nextInt(0,4)){
-//                computerSelectedRoll.add(Random.nextInt(0,4))
-//            }
-////            computerSelectedRoll.add(Random.nextInt(0,4))
-//            computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
-//            tempComputerScore -= computerDiceArray.sum()
-//            reRolldices(computerDiceArray, computerSelectedRoll, computerImgView)
-//            tempComputerScore = computerDiceArray.sum()
-//        }else{
-//            computerMessage.text = "Im happy with the result"
-//        }
-
         //algorithm to check if computer score is less than 20 points of the player score if so will re roll based on the highest numbers in rolled
 
         //If the computer's score is less than 20 and the player's score is less than 30, keep all five dice and roll again.
         if (!tieScore){
             if (computerScore<(targetValue*0.2) && playerScore<(targetValue*0.3)){
                 println("Rule 1")
-                computerMessage.text = "Im happy with the result"
+                computerMessage.text = "Im not going for a re-roll"
             }else if ((computerScore>=targetValue*0.2 && computerScore<targetValue*0.4) && playerScore<targetValue*0.4){
                 println("Rule 2")
                 //If the computer's score is between 20 and 39 and the player's score is less than 40, keep any dice that show 4 or higher and roll the remaining dice again.
@@ -372,6 +357,8 @@ class GameActivity : AppCompatActivity() {
                     }
                 }
                 computerReRoll()
+            }else{
+                computerMessage.text = "Im not going for a re-roll"
             }
             //if none of the conditions are met computer will not go for any rerolls
         }
