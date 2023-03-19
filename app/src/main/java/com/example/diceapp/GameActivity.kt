@@ -217,6 +217,7 @@ class GameActivity : AppCompatActivity() {
     }
 
 
+    //below functions saves the data incase the application destroys or rotates
     override fun onDestroy() {
         super.onDestroy()
         totalHumanWins = totalHumanWins
@@ -249,7 +250,7 @@ class GameActivity : AppCompatActivity() {
 
 
 
-
+    //below function handles the number of re rolls
     private fun reRolldices(
         DiceArray: MutableList<Int>,
         SelectedRoll: MutableList<Int>,
@@ -269,6 +270,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //below handles the decision making for the computer
     private fun computerStrategy() {
         //algorithm to check if computer score is less than 20 points of the player score if so will re roll based on the highest numbers in rolled
 
@@ -364,6 +366,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //below function handles the computer re rolls
     private fun computerReRoll() {
         computerMessage.text = "I re-rolled selecting dice: $computerSelectedRoll"
         tempComputerScore -= computerDiceArray.sum()
@@ -371,12 +374,14 @@ class GameActivity : AppCompatActivity() {
         tempComputerScore = computerDiceArray.sum()
     }
 
+    //below function sets the default once a round is over
     private fun setDefaultImage(diceImageViews: List<ImageView>) {
         for (i in diceImageViews){
             i.setImageResource(R.drawable.rolling_cup)
         }
     }
 
+    //below function displasy the result if a win or loss and tie occurs
     private fun displayPopup(result: String, color: Int) {
         val builder = AlertDialog.Builder(this)
         if(!tieScore) {
@@ -397,6 +402,7 @@ class GameActivity : AppCompatActivity() {
         dialog.findViewById<TextView>(android.R.id.message)?.setTextColor(color)
     }
 
+    //below function rolls the non selected dice in a re roll
     private fun rollSelectedDice(
         selectedRoll: MutableList<Int>,
         DiceArray: MutableList<Int>,
@@ -412,6 +418,7 @@ class GameActivity : AppCompatActivity() {
         println("$s:$DiceArray")
     }
 
+    //below function rolls the dice for both player and computer
     private fun rollDice() {
         for (i in 0..4) {
             playerDiceArray.add(Random.nextInt(1, 7))
@@ -419,12 +426,13 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //below function displays the score
     private fun showScore() {
         val viewScore = "SCORE:\nCOM:$computerScore\nME:$playerScore"
         findViewById<TextView>(R.id.scoreTextView).text = viewScore
     }
 
-
+    //the below function display the dice numbers in images
     private fun showDiceImages(values: MutableList<Int>, humanImgView: List<ImageView>) {
 
         val imageId = arrayOf(
