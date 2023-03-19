@@ -419,18 +419,6 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun totalScore() {
-        playerScore += tempPlayerScore
-        computerScore += tempComputerScore
-        tempPlayerScore = 0
-        tempComputerScore = 0
-        playerRollCount = 0
-        playerDiceArray.clear()
-        computerDiceArray.clear()
-        playerSelectedRoll.clear()
-
-    }
-
     private fun showScore() {
         val viewScore = "SCORE:\nCOM:$computerScore\nME:$playerScore"
         findViewById<TextView>(R.id.scoreTextView).text = viewScore
